@@ -1,0 +1,34 @@
+{
+    "name": "tkxyz/stream",
+    "description": "PHP arrays and objects utility library",
+    "type": "library",
+    "license": "MIT",
+    "keywords": [
+        "array",
+        "arrays",
+        "object",
+        "objects",
+        "utility",
+        "library"
+    ],
+    "autoload": {
+        "psr-4": {
+            "Stream\\": "src/"
+        }
+    },
+    "authors": [
+        {
+            "name": "tkxyz",
+            "email": "tk.moteam@gmail.com"
+        }
+    ],
+    "require": {
+        "php": ">=7.4.0"
+    },
+    "require-dev": {
+        "phpunit/phpunit": "9.6.x-dev"
+    },
+    "scripts": {
+        "test": "phpunit -v tests"
+    }
+}
