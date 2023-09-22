@@ -10,10 +10,11 @@ use Stream\Tests\Data\DataProvider;
 
 class CreateTest extends TestCase {
     /**
+     * @covers \Stream\Stream
      * @dataProvider dataProvider
      */
     public function testArray($expected, $input): void {
-        $this->assertEquals($expected, Stream::of($input)());
+        $this->assertEquals($expected, Stream::of($input)->collect());
     }
 
     public function dataProvider(): array {

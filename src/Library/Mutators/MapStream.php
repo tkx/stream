@@ -6,11 +6,14 @@ use Stream\Stream;
 
 class MapStream extends Stream {
     public function stream(): \Iterator {
-        if(!is_callable($this->mutator)) {
-            throw new \InvalidArgumentException();
-        }
+        $mutator = $this->useMutator();
+        [$preserve_keys] = $this->useParameters(["is_bool", false]);
         foreach($this->iterator as $key => $value) {
-            yield $key => ($this->mutator)($value);
+            if($preserve_keys) {
+                yield $key => ($mutator)($value);
+            } else {
+                yield ($mutator)($value);
+            }
         }
     }
 }

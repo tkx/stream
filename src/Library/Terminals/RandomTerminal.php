@@ -2,12 +2,10 @@
 
 namespace Stream\Library\Terminals;
 
-class MinTerminal extends Terminal {
+class RandomTerminal extends Terminal {
     public function __invoke(...$parameters) {
-        [$fn] = $this->useParameters($parameters, ["is_callable", null]);
         $data = iterator_to_array($this->stream->stream());
-        uasort($data, $fn);
-
+        shuffle($data);
         return $data[0];
     }
 }

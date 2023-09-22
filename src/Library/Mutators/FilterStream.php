@@ -6,17 +6,20 @@ use Stream\Stream;
 
 class FilterStream extends Stream {
     public function stream(): \Iterator {
-        if(!is_callable($this->mutator)) {
-            throw new \InvalidArgumentException();
-        }
+        $mutator = $this->useMutator();
+        [$preserve_keys] = $this->useParameters(["is_bool", false]);
         foreach($this->iterator as $key => $value) {
             if($this->mutator !== null) {
-                $temp = ($this->mutator)($value);
+                $temp = ($mutator)($value);
             } else {
                 $temp = !!$value;
             }
             if($temp !== false) {
-                yield $key => $value;
+                if(!$preserve_keys) {
+                    yield $value;
+                } else {
+                    yield $key => $value;
+                }
             }
         }
     }

@@ -4,19 +4,17 @@ namespace Stream\Library\Mutators;
 
 use Stream\Stream;
 
-class LimitStream extends Stream {
+class RejectStream extends Stream {
     public function stream(): \Iterator {
-        $i = 0;
-        [$limit, $preserve_keys] = $this->useParameters(["is_int", null], ["is_bool", false]);
         foreach($this->iterator as $key => $value) {
-            if(++$i <= $limit) {
+            $temp = ($this->useMutator())($value);
+            [$preserve_keys] = $this->useParameters(["is_bool", false]);
+            if($temp === false) {
                 if($preserve_keys) {
                     yield $key => $value;
                 } else {
                     yield $value;
                 }
-            } else {
-                break;
             }
         }
     }

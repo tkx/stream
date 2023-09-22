@@ -14,7 +14,8 @@
     "autoload": {
         "psr-4": {
             "Stream\\": "src/"
-        }
+        },
+        "files": ["src/Library/functions.php"]
     },
     "authors": [
         {

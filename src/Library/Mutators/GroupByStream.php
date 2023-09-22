@@ -1,0 +1,26 @@
+<?php
+
+namespace Stream\Library\Mutators;
+
+use Stream\Stream;
+
+class GroupByStream extends Stream {
+    public function stream(): \Iterator {
+        $mutator = $this->useMutator();
+        $groups = [];
+        foreach($this->iterator as $key => $value) {
+            $key0 = ($mutator)($value);
+            if(!is_int($key0) && !is_string($key0)) {
+                throw new \BadFunctionCallException();
+            }
+            if(!array_key_exists($key0, $groups)) {
+                $groups[$key0] = [$value];
+            } else {
+                $groups[$key0][] = $value;
+            }
+        }
+        foreach($groups as $key0 => $value0) {
+            yield $key0 => $value0;
+        }
+    }
+}

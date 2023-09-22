@@ -6,16 +6,16 @@ use Stream\Stream;
 
 class SortedStream extends Stream {
     public function stream(): \Iterator {
-        if(!is_callable($this->parameters[0])) {
-            throw new \InvalidArgumentException();
-        }
-        $fn = $this->parameters[0];
-
+        $fn = $this->useMutator();
         $data = iterator_to_array($this->iterator);
         uasort($data, $fn);
-
+        [$preserve_keys] = $this->useParameters(["is_bool", false]);
         foreach($data as $key => $value) {
-            yield $key => $value;
+            if($preserve_keys) {
+                yield $key => $value;
+            } else {
+                yield $value;
+            }
         }
     }
 }
