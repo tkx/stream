@@ -1,6 +1,6 @@
 <?php
 
-namespace Stream\Library\Terminals;
+namespace Moteam\Stream\Library\Terminals;
 
 class MinTerminal extends Terminal {
     public function __invoke(...$parameters) {
@@ -8,6 +8,6 @@ class MinTerminal extends Terminal {
         $data = iterator_to_array($this->stream->stream());
         uasort($data, $fn);
 
-        return $data[0];
+        return array_values($data)[0];
     }
 }

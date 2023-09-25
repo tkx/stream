@@ -1,6 +1,6 @@
 <?php
 
-namespace Stream\Library\Terminals;
+namespace Moteam\Stream\Library\Terminals;
 
 class ObjectTerminal extends Terminal {
     public function __invoke(...$parameters) {

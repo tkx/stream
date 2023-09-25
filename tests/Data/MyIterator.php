@@ -1,6 +1,6 @@
 <?php declare(strict_types=1);
 
-namespace Stream\Tests\Data;
+namespace Moteam\Stream\Tests\Data;
 
 class MyIterator implements \Iterator {
     private $items = [];

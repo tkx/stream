@@ -1,8 +1,8 @@
 <?php
 
-namespace Stream\Library\Mutators;
+namespace Moteam\Stream\Library\Mutators;
 
-use Stream\Stream;
+use Moteam\Stream\Stream;
 
 class LimitStream extends Stream {
     public function stream(): \Iterator {

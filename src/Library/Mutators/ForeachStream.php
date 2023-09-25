@@ -1,14 +1,14 @@
 <?php
 
-namespace Stream\Library\Mutators;
+namespace Moteam\Stream\Library\Mutators;
 
-use Stream\Stream;
+use Moteam\Stream\Stream;
 
 class ForeachStream extends Stream {
     public function stream(): \Iterator {
         $mutator = $this->useMutator();
         foreach($this->iterator as $key => $value) {
-            ($mutator)($value, $key);
+            call_user_func($mutator, $value, $key);
             yield $key => $value;
         }
     }

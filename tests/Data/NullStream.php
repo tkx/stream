@@ -4,15 +4,14 @@ namespace Moteam\Stream\Library\Mutators;
 
 use Moteam\Stream\Stream;
 
-class MapStream extends Stream {
+class NullStream extends Stream {
     public function stream(): \Iterator {
-        $mutator = $this->useMutator();
         [$preserve_keys] = $this->useParameters(["is_bool", false]);
         foreach($this->iterator as $key => $value) {
-            if($preserve_keys) {
-                yield $key => call_user_func($mutator, $value);
+            if(!$preserve_keys) {
+                yield null;
             } else {
-                yield call_user_func($mutator, $value);
+                yield $key => null;
             }
         }
     }

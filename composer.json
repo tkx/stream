@@ -1,5 +1,5 @@
 {
-    "name": "tkxyz/stream",
+    "name": "moteam/stream",
     "description": "PHP arrays and objects utility library",
     "type": "library",
     "license": "MIT",
@@ -13,7 +13,7 @@
     ],
     "autoload": {
         "psr-4": {
-            "Stream\\": "src/"
+            "Moteam\\Stream\\": "src/"
         },
         "files": ["src/Library/functions.php"]
     },

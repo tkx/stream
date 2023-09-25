@@ -1,25 +1,24 @@
 <?php
 require "vendor/autoload.php";
+require "tests/Data/NullStream.php";
+require "tests/Data/ZeroTerminal.php";
 
-use Stream\Stream;
+use Moteam\Stream\Stream;
+use function Moteam\Stream\Library\S;
+use Moteam\Stream\Library\Mutators\NullStream;
+use Moteam\Stream\Library\Terminals\ZeroTerminal;
 
-$test = Stream::of((function() {
-    foreach([1, 1.5, 2, 2.5, 3] as $x) {
-//        usleep(1000 * 500);
-        yield $x;
-    }
-})())
+//print_r([is_callable("empty")]);
+
 //    ->filter(fn($x) => $x != 0)
 //    ->map(fn($x) => $x * 2)
 //    ->limit(5)
 //    ->skip(5)
 //->groupBy(fn($x) => (int)floor($x))
-();
+//();
 //print_r($test);
 
-$test = Stream::of([["x" => 1], ["x" => 2], ["x" => 3]])
-    ->indexBy("x")
-();
+$test = Stream::of([1,2,3,4,5])->null()->zero();
 print_r($test);
 
 

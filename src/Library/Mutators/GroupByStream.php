@@ -1,15 +1,15 @@
 <?php
 
-namespace Stream\Library\Mutators;
+namespace Moteam\Stream\Library\Mutators;
 
-use Stream\Stream;
+use Moteam\Stream\Stream;
 
 class GroupByStream extends Stream {
     public function stream(): \Iterator {
         $mutator = $this->useMutator();
         $groups = [];
         foreach($this->iterator as $key => $value) {
-            $key0 = ($mutator)($value);
+            $key0 = call_user_func($mutator, $value);
             if(!is_int($key0) && !is_string($key0)) {
                 throw new \BadFunctionCallException();
             }

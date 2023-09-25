@@ -1,9 +1,9 @@
 <?php declare(strict_types=1);
 
-namespace Stream\Tests\Data;
+namespace Moteam\Stream\Tests\Data;
 
 require_once "MyIterator.php";
-use Stream\Stream as S;
+use Moteam\Stream\Stream as S;
 
 class DataProvider {
     /**

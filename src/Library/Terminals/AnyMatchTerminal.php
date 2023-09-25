@@ -1,14 +1,14 @@
 <?php
 
-namespace Stream\Library\Terminals;
+namespace Moteam\Stream\Library\Terminals;
 
 class AnyMatchTerminal extends Terminal {
     public function __invoke(...$parameters) {
         [$fn] = $this->useParameters($parameters, ["is_callable", null]);
-        $accumulator = false;
         foreach($this->stream->stream() as $key => $value) {
-            $accumulator = $fn($value) || $accumulator;
+            if(call_user_func($fn, $value))
+                return true;
         }
-        return $accumulator;
+        return false;
     }
 }

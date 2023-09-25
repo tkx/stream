@@ -1,8 +1,8 @@
 <?php
 
-namespace Stream\Library\Mutators;
+namespace Moteam\Stream\Library\Mutators;
 
-use Stream\Stream;
+use Moteam\Stream\Stream;
 
 class FilterStream extends Stream {
     public function stream(): \Iterator {
@@ -10,7 +10,7 @@ class FilterStream extends Stream {
         [$preserve_keys] = $this->useParameters(["is_bool", false]);
         foreach($this->iterator as $key => $value) {
             if($this->mutator !== null) {
-                $temp = ($mutator)($value);
+                $temp = call_user_func($mutator, $value);
             } else {
                 $temp = !!$value;
             }

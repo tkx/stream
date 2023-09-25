@@ -1,41 +1,128 @@
 <?php
-namespace Stream;
+namespace Moteam\Stream;
+
+use ArrayIterator;
+use ArrayObject;
+use BadMethodCallException;
+use Closure;
+use Exception;
+use Generator;
+use InvalidArgumentException;
+use Iterator;
+use IteratorAggregate;
+use Moteam\Stream\Library\Terminals\Terminal;
+use Traversable;
+use function is_array;
+use function is_object;
 
 require_once "Library/functions.php";
 
-// todo - change $mutator(...) -> call_user_func($mutator, ...)
-// todo - Stream::useParameters, Terminal::useParameters -> useParameters($parameters, ...$specs)
+// todo - Stream::useParameters, Terminal::useParameters -> standalone function useParameters($parameters, ...$specs)
 // todo - useParameters - add multiple validators
 
+/**
+ * Class Stream
+ * @package Moteam\Stream
+ *
+ * MoTeam - Web strategy solutions
+ *
+ * @method concat(mixed $source, bool $preserve_keys = false): Stream
+ * @method countBy(callable $by = fn(mixed $x): mixed => !!$x): Stream
+ * @method distinct(int $limit, bool $preserve_keys = false): Stream
+ * @method enrich(callable $with = fn(array $data): Iterator => yield from $data): Stream
+ * @method filter(callable $by = fn(mixed $x): bool => !!$x, bool $preserve_keys = false): Stream
+ * @method foreach(callable $do = function(mixed $x): void {}): Stream
+ * @method groupBy(callable $by = fn(mixed $x): mixed => !!$x): Stream
+ * @method indexBy(string|int $x): Stream
+ * @method keys(): Stream
+ * @method limit(int $n, bool $preserve_keys = false): Stream
+ * @method map(callable $by = fn(mixed $x): mixed => !!$x, bool $preserve_keys = false): Stream
+ * @method partition(callable $by = fn(mixed $x): bool => !!$x): Stream
+ * @method randomN(int $n): Stream
+ * @method reject(callable $by = fn(mixed $x): bool => !!$x, bool $preserve_keys = false): Stream
+ * @method skip(int $n, bool $preserve_keys = false): Stream
+ * @method sorted(bool $preserve_keys = false): Stream
+ *
+ * @method allMatch(callable $by = fn(mixed $x): bool => !!$x): bool
+ * @method anyMatch(callable $by = fn(mixed $x): bool => !!$x): bool
+ * @method collect(): array
+ * @method contains(mixed $v): bool
+ * @method count(): int
+ * @method findFirst(callable $by = fn(mixed $x): bool => !!$x): mixed
+ * @method findLast(callable $by = fn(mixed $x): bool => !!$x): mixed
+ * @method max(callable $comp = fn(mixed $a, mixed $b): int => $a - $b): mixed
+ * @method min(callable $comp = fn(mixed $a, mixed $b): int => $a - $b): mixed
+ * @method object(): \stdClass
+ * @method random(): mixed
+ * @method reduce(callable $by = fn(mixed $acc, mixed $value): mixed => $acc + $value): mixed
+ */
 class Stream {
-    protected ?\Iterator $iterator = null;
-    protected ?\Closure $mutator = null;
+    /**
+     * Each input transformed into this
+     * @var Iterator|ArrayIterator|Generator|mixed|Traversable|null
+     */
+    protected ?Iterator $iterator = null;
+    /**
+     * Function that mutates input data in this current object
+     * @var Closure|callable|null
+     */
+    protected ?Closure $mutator = null;
+    /**
+     * Parameters to use in mutation
+     * @var array|mixed|null
+     */
     protected ?array $parameters = null;
 
+    /**
+     * Factory method for actual streams creation
+     * Stream::of([1,2,3,4,5])
+     * ->filter(fn($x) => !!$x)
+     * ->map(fn($x) => $x * 2)
+     * ->foreach(function() use($logger) { $logger->info($x); })
+     * () // ~ ->collect()
+     * @param $of <p>array, iterable, ArrayObject, IteratorAggregate, Generator, Iterator, Traversable or another Stream</p>
+     * @param callable|null $mutator <p>callable to mutate provided input</p>
+     * @param ...$parameters
+     * @return static
+     * @throws Exception
+     */
     public static function of($of, callable $mutator = null, ...$parameters): self {
         return new static($of, $mutator, $parameters);
     }
-    public function stream(): \Iterator { yield from $this->iterator; }
-    protected function __construct($of, callable $mutator = null, $parameters = []) {
-        if(\is_array($of)) {
+
+    /**
+     * Actually stream data
+     * @return Iterator
+     */
+    public function stream(): Iterator { yield from $this->iterator; }
+
+    /**
+     * Protected, call Stream::of to do stuff
+     * @param $of
+     * @param callable|null $mutator
+     * @param array $parameters
+     * @throws InvalidArgumentException|Exception
+     */
+    protected function __construct($of, callable $mutator = null, array $parameters = []) {
+        if(is_array($of)) {
             $this->iterator = (function() use($of) { yield from $of; })();
-        } else if(\is_object($of)) {
+        } else if(is_object($of)) {
             switch(true) {
                 case $of instanceof Stream:
                     $this->iterator = $of->stream();
                     break;
-                case $of instanceof \Traversable:
-                case $of instanceof \Iterator:
+                case $of instanceof Traversable:
+                case $of instanceof Iterator:
                 case $of instanceof \iterable:
-                case $of instanceof \Generator:
+                case $of instanceof Generator:
                     $this->iterator = $of;
                     break;
-                case $of instanceof \IteratorAggregate:
-                case $of instanceof \ArrayObject:
+                case $of instanceof IteratorAggregate:
+                case $of instanceof ArrayObject:
                     $this->iterator = $of->getIterator();
                     break;
                 default:
-                    throw new \InvalidArgumentException();
+                    throw new InvalidArgumentException();
             }
         }
 
@@ -43,27 +130,47 @@ class Stream {
         $this->parameters = $parameters;
     }
 
+    /**
+     * Hook to obtain validated mutator function in prebuilt and extension Stream and Terminal classes
+     * @return callable
+     */
     protected function useMutator(): callable {
         if(!$this->mutator || !is_callable($this->mutator)) {
-            throw new \InvalidArgumentException();
+            throw new InvalidArgumentException();
         }
         return $this->mutator;
     }
+
+    /**
+     * Hook to obtain validated parameters for mutator in prebuilt and extension Stream and Terminal classes
+     * Validates and returns clean data gotten from user input, Exception is thrown if data in invalid
+     * @param ...$specs <p>Parameters description as [[callable, mixed|null], ...] - pairs of (validator, defaultValue)
+     *                  validators - list of validator functions, e.g. is_int, is_string, ...; should all return non nullish to pass
+     *                  defaultValue = mixed|null, optional default value if not provided input
+     *                  </p>
+     * @return array <p>Array of expected values</p>
+     * @throws InvalidArgumentException
+     */
     protected function useParameters(...$specs): array {
         $values = [];
         foreach($specs as $i => $spec) {
-            [$validator, $default] = $spec;
+            [$validators, $default] = $spec;
             if(array_key_exists($i, $this->parameters)) {
-                if(\is_callable($validator) && !call_user_func($validator, $this->parameters[$i])) {
-                    throw new \InvalidArgumentException();
+                if(!is_array($validators)) {
+                    $validators = [$validators];
                 }
-                if(!\is_callable($validator)) {
-                    throw new \InvalidArgumentException();
+                foreach($validators as $validator) {
+                    if (is_callable($validator) && !call_user_func($validator, $this->parameters[$i])) {
+                        throw new InvalidArgumentException();
+                    }
+                    if (!is_callable($validator)) {
+                        throw new InvalidArgumentException();
+                    }
                 }
                 $values[] = $this->parameters[$i];
             } else {
                 if($default === null) {
-                    throw new \InvalidArgumentException();
+                    throw new InvalidArgumentException();
                 }
                 $values[] = $default;
             }
@@ -71,16 +178,26 @@ class Stream {
         return $values;
     }
 
+    /**
+     * Processes actual chaining usage, returning next immutable Stream in chain of actions
+     * May be a mutation or a terminal
+     * @param string $name
+     * @param array $parameters
+     * @return Stream|Terminal
+     * @throws Exception
+     */
     public function __call(string $name, array $parameters) {
-        if(array_key_exists($name, self::$terminals)) {
-            $klass = self::$terminals[$name];
+        if(class_exists("\\Moteam\\Stream\\Library\\Terminals\\{$name}Terminal", true)) {
+            /** @var Terminal $klass */
+            $klass = "\\Moteam\\Stream\\Library\\Terminals\\${name}Terminal";
             return ($klass::of($this))(...$parameters);
         }
 
-        if(!array_key_exists($name, self::$mutators)) {
-            throw new \BadMethodCallException();
+        if(!class_exists("\\Moteam\\Stream\\Library\\Mutators\\{$name}Stream")) {
+            throw new BadMethodCallException();
         }
-        $klass = self::$mutators[$name];
+        /** @var Stream $klass */
+        $klass = "\\Moteam\\Stream\\Library\\Mutators\\{$name}Stream";
 
         $new_iterator = (function() {
             yield from $this->stream();
@@ -97,48 +214,11 @@ class Stream {
         }
     }
 
+    /**
+     * This is a shortcut to collect() terminal call
+     * @return mixed
+     */
     public function __invoke() {
         return $this->collect();
     }
-
-    private static array $mutators = [
-        "map" => \Stream\Library\Mutators\MapStream::class,
-        "keys" => \Stream\Library\Mutators\KeysStream::class,
-        "pluck" => \Stream\Library\Mutators\KeysStream::class,
-        "filter" => \Stream\Library\Mutators\FilterStream::class,
-        "reject" => \Stream\Library\Mutators\RejectStream::class,
-        "skip" => \Stream\Library\Mutators\SkipStream::class,
-        "limit" => \Stream\Library\Mutators\LimitStream::class,
-        "distinct" => \Stream\Library\Mutators\DistinctStream::class,
-        "concat" => \Stream\Library\Mutators\ConcatStream::class,
-        "foreach" => \Stream\Library\Mutators\ForeachStream::class,
-        "extend" => \Stream\Library\Mutators\ConcatStream::class,
-        "enrich" => \Stream\Library\Mutators\EnrichStream::class,
-        "sorted" => \Stream\Library\Mutators\SortedStream::class,
-        "groupBy" => \Stream\Library\Mutators\GroupByStream::class,
-        "countBy" => \Stream\Library\Mutators\CountByStream::class,
-        "indexBy" => \Stream\Library\Mutators\IndexByStream::class,
-        "randomN" => \Stream\Library\Mutators\RandomNStream::class,
-        "sampleN" => \Stream\Library\Mutators\RandomNStream::class,
-        "partition" => \Stream\Library\Mutators\PartitionStream::class,
-    ];
-
-    private static array $terminals = [
-        "collect" => \Stream\Library\Terminals\CollectTerminal::class,
-        "reduce" => \Stream\Library\Terminals\ReduceTerminal::class,
-        "anyMatch" => \Stream\Library\Terminals\AnyMatchTerminal::class,
-        "every" => \Stream\Library\Terminals\AllMatchTerminal::class,
-        "allMatch" => \Stream\Library\Terminals\AllMatchTerminal::class,
-        "some" => \Stream\Library\Terminals\AnyMatchTerminal::class,
-        "count" => \Stream\Library\Terminals\CountTerminal::class,
-        "size" => \Stream\Library\Terminals\CountTerminal::class,
-        "findLast" => \Stream\Library\Terminals\FindLastTerminal::class,
-        "findFirst" => \Stream\Library\Terminals\FindFirstTerminal::class,
-        "contains" => \Stream\Library\Terminals\ContainsTerminal::class,
-        "object" => \Stream\Library\Terminals\ObjectTerminal::class,
-        "min" => \Stream\Library\Terminals\MinTerminal::class,
-        "max" => \Stream\Library\Terminals\MaxTerminal::class,
-        "random" => \Stream\Library\Terminals\RandomTerminal::class,
-        "sample" => \Stream\Library\Terminals\RandomTerminal::class,
-    ];
 }

@@ -1,8 +1,8 @@
 <?php
 
-namespace Stream\Library\Mutators;
+namespace Moteam\Stream\Library\Mutators;
 
-use Stream\Stream;
+use Moteam\Stream\Stream;
 
 class EnrichStream extends Stream {
     public function stream(): \Iterator {
@@ -13,7 +13,7 @@ class EnrichStream extends Stream {
             yield $key => $value;
         }
 
-        foreach(($mutator)($data) as $key => $value) {
+        foreach(call_user_func($mutator, $data) as $key => $value) {
             yield $key => $value;
         }
     }
