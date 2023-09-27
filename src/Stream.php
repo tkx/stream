@@ -18,7 +18,6 @@ use function is_object;
 require_once "Library/functions.php";
 
 // todo - Stream::useParameters, Terminal::useParameters -> standalone function useParameters($parameters, ...$specs)
-// todo - useParameters - add multiple validators
 
 /**
  * Class Stream
@@ -33,6 +32,7 @@ require_once "Library/functions.php";
  * @method filter(callable $by = fn(mixed $x): bool => !!$x, bool $preserve_keys = false): Stream
  * @method foreach(callable $do = function(mixed $x): void {}): Stream
  * @method groupBy(callable $by = fn(mixed $x): mixed => !!$x): Stream
+ * @method mapBy(callable $by = fn(mixed $x): mixed => !!$x): Stream
  * @method indexBy(string|int $x): Stream
  * @method keys(): Stream
  * @method limit(int $n, bool $preserve_keys = false): Stream

@@ -26,6 +26,18 @@ class MutatorsTest extends TestCase {
     }
 
     /**
+     * @covers \Moteam\Stream\Library\Mutators\MapByStream
+     */
+    public function testMapBy(): void {
+        $expected = [1 => [1 * 2, 1.5 * 2], 2 => [2 * 2, 2.5 * 2], 3 => [3 * 2]];
+        $this->assertEquals($expected, __S([1, 1.5, 2, 2.5, 3])
+            ->groupBy(fn($x) => (int)floor($x))
+            ->mapBy(fn($x) => $x * 2)
+            ->collect()
+        );
+    }
+
+    /**
      * @covers \Moteam\Stream\Library\Mutators\DistinctStream
      * @dataProvider distinctProvider
      */
