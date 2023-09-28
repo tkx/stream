@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types=1);
 namespace Moteam\Stream;
 
 use ArrayIterator;
@@ -14,10 +14,7 @@ use Moteam\Stream\Library\Terminals\Terminal;
 use Traversable;
 use function is_array;
 use function is_object;
-
-require_once "Library/functions.php";
-
-// todo - Stream::useParameters, Terminal::useParameters -> standalone function useParameters($parameters, ...$specs)
+use function \Moteam\Stream\Library\use_parameters;
 
 /**
  * Class Stream
@@ -152,30 +149,31 @@ class Stream {
      * @throws InvalidArgumentException
      */
     protected function useParameters(...$specs): array {
-        $values = [];
-        foreach($specs as $i => $spec) {
-            [$validators, $default] = $spec;
-            if(array_key_exists($i, $this->parameters)) {
-                if(!is_array($validators)) {
-                    $validators = [$validators];
-                }
-                foreach($validators as $validator) {
-                    if (is_callable($validator) && !call_user_func($validator, $this->parameters[$i])) {
-                        throw new InvalidArgumentException();
-                    }
-                    if (!is_callable($validator)) {
-                        throw new InvalidArgumentException();
-                    }
-                }
-                $values[] = $this->parameters[$i];
-            } else {
-                if($default === null) {
-                    throw new InvalidArgumentException();
-                }
-                $values[] = $default;
-            }
-        }
-        return $values;
+        return use_parameters($this->parameters, ...$specs);
+        // $values = [];
+        // foreach($specs as $i => $spec) {
+        //     [$validators, $default] = $spec;
+        //     if(array_key_exists($i, $this->parameters)) {
+        //         if(!is_array($validators)) {
+        //             $validators = [$validators];
+        //         }
+        //         foreach($validators as $validator) {
+        //             if (is_callable($validator) && !call_user_func($validator, $this->parameters[$i])) {
+        //                 throw new InvalidArgumentException();
+        //             }
+        //             if (!is_callable($validator)) {
+        //                 throw new InvalidArgumentException();
+        //             }
+        //         }
+        //         $values[] = $this->parameters[$i];
+        //     } else {
+        //         if($default === null) {
+        //             throw new InvalidArgumentException();
+        //         }
+        //         $values[] = $default;
+        //     }
+        // }
+        // return $values;
     }
 
     /**
