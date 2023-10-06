@@ -2,6 +2,12 @@
 
 namespace Moteam\Stream\Library\Terminals;
 
+/**
+ * Returns true if given value presents in this stream
+ * @method contains(mixed $v): bool
+ * 
+ * @psalm-api
+ */
 class ContainsTerminal extends Terminal {
     public function __invoke(...$parameters) {
         [$v] = $this->useParameters($parameters, [fn($x) => true, null]);

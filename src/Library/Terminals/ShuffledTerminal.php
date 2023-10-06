@@ -3,15 +3,15 @@
 namespace Moteam\Stream\Library\Terminals;
 
 /**
- * Returns random value from source stream
- * @method random(): mixed
+ * Returns shuffled source stream as array (shortcut to $stream->shuffle()->collect())
+ * @method shuffled(): mixed
  * 
  * @psalm-api
  */
-class RandomTerminal extends Terminal {
+class ShuffledTerminal extends Terminal {
     public function __invoke(...$parameters) {
         $data = iterator_to_array($this->stream->stream());
         shuffle($data);
-        return $data[0];
+        return $data;
     }
 }

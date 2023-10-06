@@ -4,6 +4,12 @@ namespace Moteam\Stream\Library\Mutators;
 
 use Moteam\Stream\Stream;
 
+/**
+ * Streams unique values from source stream, limit can be set to stream more than 1 occurrence
+ * @method distinct(int $limit, bool $preserve_keys = false): Stream
+ * 
+ * @psalm-api
+ */
 class DistinctStream extends Stream {
     public array $hashMap = [];
     public function stream(): \Iterator {

@@ -4,6 +4,13 @@ namespace Moteam\Stream\Library\Mutators;
 
 use Moteam\Stream\Stream;
 
+/**
+ * Divides source stream into two groups by boolean return of given function, applied to each source stream value.
+ * Same as groupBy, but grouper is of boolean return
+ * @method partition(callable $by = fn(mixed $x): bool => !!$x): Stream
+ * 
+ * @psalm-api
+ */
 class PartitionStream extends Stream {
     public function stream(): \Iterator {
         $groups = [[], []];

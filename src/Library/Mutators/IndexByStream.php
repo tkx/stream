@@ -4,6 +4,12 @@ namespace Moteam\Stream\Library\Mutators;
 
 use Moteam\Stream\Stream;
 
+/**
+ * Indexes source stream by given key, then streams the result
+ * @method indexBy(string|int $x): Stream
+ * 
+ * @psalm-api
+ */
 class IndexByStream extends Stream {
     public function stream(): \Iterator {
         $groups = [];

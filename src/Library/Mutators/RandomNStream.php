@@ -4,6 +4,12 @@ namespace Moteam\Stream\Library\Mutators;
 
 use Moteam\Stream\Stream;
 
+/**
+ * Streams N random values from source stream
+ * @method randomN(int $n = 1): Stream
+ * 
+ * @psalm-api
+ */
 class RandomNStream extends Stream {
     public function stream(): \Iterator {
         $data = iterator_to_array($this->iterator);

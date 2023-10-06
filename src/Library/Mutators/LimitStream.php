@@ -4,6 +4,12 @@ namespace Moteam\Stream\Library\Mutators;
 
 use Moteam\Stream\Stream;
 
+/**
+ * Streams first N values of source stream
+ * @method limit(int $n, bool $preserve_keys = false): Stream
+ * 
+ * @psalm-api
+ */
 class LimitStream extends Stream {
     public function stream(): \Iterator {
         $i = 0;

@@ -4,6 +4,12 @@ namespace Moteam\Stream\Library\Mutators;
 
 use Moteam\Stream\Stream;
 
+/**
+ * Applies given function to each source stream element, and stream the result
+ * @method map(callable $by = fn(mixed $x): mixed => !!$x, bool $preserve_keys = false): Stream
+ * 
+ * @psalm-api
+ */
 class MapStream extends Stream {
     public function stream(): \Iterator {
         $mutator = $this->useMutator();

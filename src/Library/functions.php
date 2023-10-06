@@ -4,6 +4,9 @@ namespace Moteam\Stream\Library;
 
 use Moteam\Stream\Stream;
 
+/**
+ * Consumes array of input values and validates it against provided scheme.
+ */
 function use_parameters($parameters, ...$specs): array {
     $values = [];
     foreach($specs as $i => $spec) {
@@ -32,10 +35,10 @@ function use_parameters($parameters, ...$specs): array {
 }
 function is_streamable($of): bool {
     return \is_array($of)
-        || $of instanceof \Moteam\Stream\Stream
+        || $of instanceof Stream
         || $of instanceof \Traversable
         || $of instanceof \Iterator
-        || $of instanceof \iterable
+        || is_iterable($of)
         || $of instanceof \Generator
         || $of instanceof \IteratorAggregate
         || $of instanceof \ArrayObject;

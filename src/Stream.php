@@ -17,28 +17,51 @@ use function is_object;
 use function \Moteam\Stream\Library\use_parameters;
 
 /**
- * Class Stream
- * @package Moteam\Stream
- *
- * MoTeam - Web strategy solutions
+ * MoTeam - strategic web solutions.
+ * 
+ * Enter Stream Library - convenient array mutation and filtering conveyor, that takes the pain of working with arrays in PHP.
+ * 
+ * Create Streams using "of" factory method, providing any suitable input, then chain mutator methods to transform
+ * your data, then collect it applying any terminal method.
+ * 
+ * Backed by PHP generators, all chained methods are lazy, thus traversing your data only once when you collect it.
+ * 
+ * This is one rare arrays library, that supports chaining.
+ * 
+ * Write complex but clear transformation conveyors.
+ * 
+ * Collect tailored results with terminal methods.
+ * 
+ * Save your time and efforts and give focus to creation, rather than routine.
+ * 
+ * 
+ * Extend the library easily with your own awesome custom logic!
+ * As Stream Library strictly follows SOLID principles and Design Patterns -
+ * just extend Stream or Terminal class within Moteam\Stream\Library\* namespace and your methods will automatically be available by
+ * by the prefix name of the class!
+ * 
+ * Inspired by Java Stream API, Javascript Underscore and Lodash libraries, and numerous PHP array libraries.
  *
  * @method concat(mixed $source, bool $preserve_keys = false): Stream
+ * @method concatBefore(mixed $source, bool $preserve_keys = false): Stream
  * @method countBy(callable $by = fn(mixed $x): mixed => !!$x): Stream
  * @method distinct(int $limit, bool $preserve_keys = false): Stream
  * @method enrich(callable $with = fn(array $data): Iterator => yield from $data): Stream
  * @method filter(callable $by = fn(mixed $x): bool => !!$x, bool $preserve_keys = false): Stream
  * @method foreach(callable $do = function(mixed $x): void {}): Stream
+ * @method forall(callable $do = function(mixed[] $values): void {}): Stream
  * @method groupBy(callable $by = fn(mixed $x): mixed => !!$x): Stream
- * @method mapBy(callable $by = fn(mixed $x): mixed => !!$x): Stream
+ * @method mapBy(callable $by = fn(mixed $x): mixed => $x): Stream
  * @method indexBy(string|int $x): Stream
  * @method keys(): Stream
  * @method limit(int $n, bool $preserve_keys = false): Stream
  * @method map(callable $by = fn(mixed $x): mixed => !!$x, bool $preserve_keys = false): Stream
  * @method partition(callable $by = fn(mixed $x): bool => !!$x): Stream
- * @method randomN(int $n): Stream
+ * @method randomN(int $n = 1): Stream
  * @method reject(callable $by = fn(mixed $x): bool => !!$x, bool $preserve_keys = false): Stream
  * @method skip(int $n, bool $preserve_keys = false): Stream
- * @method sorted(bool $preserve_keys = false): Stream
+ * @method shuffle(): Stream
+ * @method sort(callable $fn = fn(mixed $a, mixed $b): -1|0|1, bool $preserve_keys = false): Stream
  *
  * @method allMatch(callable $by = fn(mixed $x): bool => !!$x): bool
  * @method anyMatch(callable $by = fn(mixed $x): bool => !!$x): bool
@@ -51,7 +74,10 @@ use function \Moteam\Stream\Library\use_parameters;
  * @method min(callable $comp = fn(mixed $a, mixed $b): int => $a - $b): mixed
  * @method object(): \stdClass
  * @method random(): mixed
+ * @method shuffled(): mixed[]
  * @method reduce(callable $by = fn(mixed $acc, mixed $value): mixed => $acc + $value): mixed
+ * 
+ * @package Moteam\Stream
  */
 class Stream {
     /**
@@ -100,7 +126,7 @@ class Stream {
      * @param array $parameters
      * @throws InvalidArgumentException|Exception
      */
-    protected function __construct($of, callable $mutator = null, array $parameters = []) {
+    final protected function __construct($of, callable $mutator = null, array $parameters = []) {
         if(is_array($of)) {
             $this->iterator = (function() use($of) { yield from $of; })();
         } else if(is_object($of)) {
@@ -110,7 +136,7 @@ class Stream {
                     break;
                 case $of instanceof Traversable:
                 case $of instanceof Iterator:
-                case $of instanceof \iterable:
+                case is_iterable($of):
                 case $of instanceof Generator:
                     $this->iterator = $of;
                     break;
@@ -129,9 +155,12 @@ class Stream {
 
     /**
      * Hook to obtain validated mutator function in prebuilt and extension Stream and Terminal classes
-     * @return callable
+     * @return callable | null
      */
-    protected function useMutator(): callable {
+    protected function useMutator(bool $optional = false) {
+        if($optional && !$this->mutator) {
+            return null;
+        }
         if(!$this->mutator || !is_callable($this->mutator)) {
             throw new InvalidArgumentException();
         }

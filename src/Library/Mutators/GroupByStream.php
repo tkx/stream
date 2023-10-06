@@ -4,6 +4,12 @@ namespace Moteam\Stream\Library\Mutators;
 
 use Moteam\Stream\Stream;
 
+/**
+ * Groups source stream by values returned by input function and streams the result
+ * @method groupBy(callable $by = fn(mixed $x): mixed => !!$x): Stream
+ * 
+ * @psalm-api
+ */
 class GroupByStream extends Stream {
     public function stream(): \Iterator {
         $mutator = $this->useMutator();

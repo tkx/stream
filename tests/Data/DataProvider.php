@@ -10,7 +10,14 @@ class DataProvider {
      * @return array [expected, input]
      */
     public static function create(): array {
+
+        $objects = [new \stdClass(), new \stdClass(), new \stdClass()];
+        $objects = array_map(function($o) {
+            $o->prop = 1;
+        }, $objects);
+
         return [
+            "objects" => [$objects, S::of($objects)],
             "array" => [[1, 2, 3, 4, 5], [1, 2, 3, 4, 5]],
             "array of strings" => [["1", "2", "3", "4", "5"], ["1", "2", "3", "4", "5"]],
             "range" => [range(1, 5), range(1, 5)],
@@ -100,6 +107,15 @@ class DataProvider {
         return [
             [[1, 2, 3, 4, 5], [1, 2, 3], [4, 5]],
             [["1", "2", "3", "4", "5"], ["1", "2", "3"], ["4", "5"]],
+        ];
+    }
+    /**
+     * @return array
+     */
+    public static function concatBefore(): array {
+        return [
+            [[1, 2, 3, 4, 5], [4, 5], [1, 2, 3]],
+            [["1", "2", "3", "4", "5"], ["4", "5"], ["1", "2", "3"]],
         ];
     }
 

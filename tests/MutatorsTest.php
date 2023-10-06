@@ -11,14 +11,24 @@ use function Moteam\Stream\Library\S as __S;
 class MutatorsTest extends TestCase {
     /**
      * @covers \Moteam\Stream\Library\Mutators\ConcatStream
+     * @covers \Moteam\Stream::concat
      * @dataProvider concatProvider
      */
     public function testConcat($expected, $input, $concat): void {
         $this->assertEquals($expected, __S($input)->concat($concat)->collect());
     }
+    /**
+     * @covers \Moteam\Stream\Library\Mutators\ConcatBeforeStream
+     * @covers \Moteam\Stream::concatBefore
+     * @dataProvider concatBeforeProvider
+     */
+    public function testConcatBefore($expected, $input, $concat): void {
+        $this->assertEquals($expected, __S($input)->concatBefore($concat)->collect());
+    }
 
     /**
      * @covers \Moteam\Stream\Library\Mutators\MapStream
+     * @covers \Moteam\Stream::map
      * @dataProvider mapProvider
      */
     public function testMap($expected, $input, $fn): void {
@@ -27,6 +37,7 @@ class MutatorsTest extends TestCase {
 
     /**
      * @covers \Moteam\Stream\Library\Mutators\MapByStream
+     * @covers \Moteam\Stream::mapBy
      */
     public function testMapBy(): void {
         $expected = [1 => [1 * 2, 1.5 * 2], 2 => [2 * 2, 2.5 * 2], 3 => [3 * 2]];
@@ -39,14 +50,17 @@ class MutatorsTest extends TestCase {
 
     /**
      * @covers \Moteam\Stream\Library\Mutators\DistinctStream
+     * @covers \Moteam\Stream::distinct
      * @dataProvider distinctProvider
      */
     public function testDistinct($expected, $input): void {
         $this->assertEquals($expected, __S($input)->distinct()->collect());
+        $this->assertEquals([1, 1, 2, 2], __S([1, 1, 1, 2, 2, 2])->distinct(2)->collect());
     }
 
     /**
      * @covers \Moteam\Stream\Library\Mutators\EnrichStream
+     * @covers \Moteam\Stream::enrich
      * @dataProvider enrichProvider
      */
     public function testEnrich($expected, $input, $fn): void {
@@ -55,14 +69,17 @@ class MutatorsTest extends TestCase {
 
     /**
      * @covers \Moteam\Stream\Library\Mutators\FilterStream
+     * @covers \Moteam\Stream::filter
      * @dataProvider filterProvider
      */
     public function testFilter($expected, $input, $fn): void {
         $this->assertEquals($expected, __S($input)->filter($fn)->collect());
+        $this->assertEmpty(__S([0, 0, 0])->filter()->collect());
     }
 
     /**
      * @covers \Moteam\Stream\Library\Mutators\RejectStream
+     * @covers \Moteam\Stream::reject
      * @dataProvider rejectProvider
      */
     public function testReject($expected, $input, $fn): void {
@@ -71,6 +88,7 @@ class MutatorsTest extends TestCase {
 
     /**
      * @covers \Moteam\Stream\Library\Mutators\ForeachStream
+     * @covers \Moteam\Stream::foreach
      */
     public function testForeach(): void {
         $data = [];
@@ -81,7 +99,20 @@ class MutatorsTest extends TestCase {
     }
 
     /**
+     * @covers \Moteam\Stream\Library\Mutators\ForallStream
+     * @covers \Moteam\Stream::forall
+     */
+    public function testForall(): void {
+        $data = [];
+        __S([1, 2, 3, 4, 5])->forall(function($all) use(&$data) {
+            $data = $all;
+        })();
+        $this->assertEquals([1, 2, 3, 4, 5], $data);
+    }
+
+    /**
      * @covers \Moteam\Stream\Library\Mutators\LimitStream
+     * @covers \Moteam\Stream::limit
      * @dataProvider limitProvider
      */
     public function testLimit($expected, $input, $n): void {
@@ -90,6 +121,7 @@ class MutatorsTest extends TestCase {
 
     /**
      * @covers \Moteam\Stream\Library\Mutators\SkipStream
+     * @covers \Moteam\Stream::skip
      * @dataProvider skipProvider
      */
     public function testSkip($expected, $input, $n): void {
@@ -98,14 +130,16 @@ class MutatorsTest extends TestCase {
 
     /**
      * @covers \Moteam\Stream\Library\Mutators\SortedStream
+     * @covers \Moteam\Stream::sorted
      * @dataProvider sortedProvider
      */
     public function testSorted($expected, $input, $fn): void {
-        $this->assertEquals($expected, __S($input)->sorted($fn)->collect());
+        $this->assertEquals($expected, __S($input)->sort($fn)->collect());
     }
 
     /**
      * @covers \Moteam\Stream\Library\Mutators\CountByStream
+     * @covers \Moteam\Stream::countBy
      * @dataProvider countByProvider
      */
     public function testCountBy($expected, $input, $fn): void {
@@ -114,6 +148,7 @@ class MutatorsTest extends TestCase {
 
     /**
      * @covers \Moteam\Stream\Library\Mutators\GroupByStream
+     * @covers \Moteam\Stream::groupBy
      * @dataProvider groupByProvider
      */
     public function testGroupBy($expected, $input, $fn): void {
@@ -122,6 +157,7 @@ class MutatorsTest extends TestCase {
 
     /**
      * @covers \Moteam\Stream\Library\Mutators\IndexByStream
+     * @covers \Moteam\Stream::indexBy
      * @dataProvider indexByProvider
      */
     public function testIndexBy($expected, $input, $fn): void {
@@ -130,6 +166,7 @@ class MutatorsTest extends TestCase {
 
     /**
      * @covers \Moteam\Stream\Library\Mutators\KeysStream
+     * @covers \Moteam\Stream::keys
      * @dataProvider keysProvider
      */
     public function testKeys($expected, $input): void {
@@ -138,6 +175,7 @@ class MutatorsTest extends TestCase {
 
     /**
      * @covers \Moteam\Stream\Library\Mutators\PartitionStream
+     * @covers \Moteam\Stream::partition
      * @dataProvider partitionProvider
      */
     public function testPartition($expected, $input, $fn): void {
@@ -145,7 +183,20 @@ class MutatorsTest extends TestCase {
     }
 
     /**
+     * @covers \Moteam\Stream\Library\Mutators\ShuffleStream
+     * @covers \Moteam\Stream::shuffle
+     */
+    public function testShuffle(): void {
+        $in = [1, 2, 3, 4, 5];
+        $out = __S($in)->shuffle()->collect();
+        foreach($out as $v) {
+            $this->assertContains($v, $in);
+        }
+    }
+
+    /**
      * @covers \Moteam\Stream\Library\Mutators\RandomNStream
+     * @covers \Moteam\Stream::randomN
      */
     public function testRandom(): void {
         $in = [1, 2, 3, 4, 5];
@@ -154,6 +205,9 @@ class MutatorsTest extends TestCase {
         foreach($got as $x) {
             $this->assertContains($x, $in);
         }
+        $out2 = __S($in)->randomN()->collect();
+        $this->assertSameSize([0], $out2);
+        $this->assertContains($out2[0], $in);
     }
 
     /**
@@ -180,6 +234,10 @@ class MutatorsTest extends TestCase {
      * @return array
      */
     public function concatProvider(): array { return DataProvider::concat(); }
+    /**
+     * @return array
+     */
+    public function concatBeforeProvider(): array { return DataProvider::concatBefore(); }
     /**
      * @return array
      */

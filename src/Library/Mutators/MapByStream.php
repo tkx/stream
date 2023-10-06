@@ -4,6 +4,12 @@ namespace Moteam\Stream\Library\Mutators;
 
 use Moteam\Stream\Stream;
 
+/**
+ * Given result of application of groupBy method to source stream, applies function to each stream group
+ * @method mapBy(callable $by = fn(mixed $x): mixed => $x): Stream
+ * 
+ * @psalm-api
+ */
 class MapByStream extends Stream {
     public function stream(): \Iterator {
         $mutator = $this->useMutator();
