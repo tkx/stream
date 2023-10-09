@@ -14,6 +14,7 @@ class TerminalsTest extends TestCase {
      */
     public function testAllMatch() {
         $this->assertTrue(__S([2,4,6,8,10])->allMatch(fn($x) => $x%2 == 0));
+        $this->assertTrue(__S(["a"=>2,"b"=>4,"c"=>6,"d"=>8,"e"=>10])->allMatch(fn($x, $k) => $x%2 == 0 && is_string($k)));
     }
 
     /**
@@ -21,8 +22,9 @@ class TerminalsTest extends TestCase {
      * @covers \Moteam\Stream::anyMatch
      */
     public function testAnyMatch() {
+        $this->assertTrue(__S(["a"=>2,"b"=>4,"c"=>6,"d"=>8,"e"=>10])->anyMatch(fn($x, $k) => $x%2 == 0 && is_string($k)));
         $this->assertTrue(__S([2,4,6,8,10])->anyMatch(fn($x) => $x%2 == 0));
-        $this->assertTrue(__S([1,2,3,4,5])->anyMatch(fn($x) => $x%2 == 0));
+        $this->assertFalse(__S([1,1,3,3,5])->anyMatch(fn($x) => $x%2 == 0));
     }
 
     /**
@@ -40,6 +42,16 @@ class TerminalsTest extends TestCase {
      */
     public function testContains() {
         $this->assertTrue(__S([2,4,6,8,10])->contains(2));
+        $this->assertTrue(__S(["a"=>2,"b"=>4,"c"=>6,"d"=>8,"e"=>10])->contains(2));
+    }
+
+    /**
+     * @covers \Moteam\Stream\Library\Terminals\HasTerminal
+     * @covers \Moteam\Stream::has
+     */
+    public function testHas() {
+        $this->assertTrue(__S([2,4,6,8,10])->has(0));
+        $this->assertTrue(__S(["a"=>2,"b"=>4,"c"=>6,"d"=>8,"e"=>10])->has("d"));
     }
 
     /**
@@ -48,6 +60,7 @@ class TerminalsTest extends TestCase {
      */
     public function testCount() {
         $this->assertEquals(5, __S([2,4,6,8,10])->count());
+        $this->assertEquals(5, __S(["a"=>2,"b"=>4,"c"=>6,"d"=>8,"e"=>10])->count());
     }
 
     /**
@@ -56,6 +69,7 @@ class TerminalsTest extends TestCase {
      */
     public function testFindFirst() {
         $this->assertEquals(2, __S([1,2,3,4,5])->findFirst(fn($x) => $x % 2 == 0));
+        $this->assertEquals(2, __S(["a"=>2,"b"=>4,"c"=>6,"d"=>8,"e"=>10])->findFirst(fn($x) => $x % 2 == 0));
     }
 
     /**
@@ -64,6 +78,7 @@ class TerminalsTest extends TestCase {
      */
     public function testFindLast() {
         $this->assertEquals(4, __S([1,2,3,4,5])->findLast(fn($x) => $x % 2 == 0));
+        $this->assertEquals(10, __S(["a"=>2,"b"=>4,"c"=>6,"d"=>8,"e"=>10])->findLast(fn($x) => $x % 2 == 0));
     }
 
     /**
@@ -72,6 +87,7 @@ class TerminalsTest extends TestCase {
      */
     public function testMax() {
         $this->assertEquals(5, __S([1,2,3,4,5])->max(fn($a, $b) => $a - $b));
+        $this->assertEquals(10, __S(["a"=>2,"b"=>4,"c"=>6,"d"=>8,"e"=>10])->max(fn($a, $b) => $a - $b));
     }
 
     /**
@@ -80,6 +96,7 @@ class TerminalsTest extends TestCase {
      */
     public function testMin() {
         $this->assertEquals(1, __S([1,2,3,4,5])->min(fn($a, $b) => $a - $b));
+        $this->assertEquals(2, __S(["a"=>2,"b"=>4,"c"=>6,"d"=>8,"e"=>10])->min(fn($a, $b) => $a - $b));
     }
 
     /**
@@ -106,6 +123,7 @@ class TerminalsTest extends TestCase {
      */
     public function testReduce() {
         $this->assertEquals(15, __S([1, 2, 3, 4, 5])->reduce(fn($a, $x) => $a + $x, 0));
+        $this->assertEquals(25, __S(["0" => 1, "1" => 2, "2" => 3, "3" => 4, "4" => 5])->reduce(fn($a, $x, $key) => $a + $x + intval($key), 0));
     }
 
     /**

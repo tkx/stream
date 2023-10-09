@@ -6,6 +6,14 @@ use Moteam\Stream\Stream;
 
 /**
  * Consumes array of input values and validates it against provided scheme.
+ * 
+ * @param mixed[] $parameters Array of input values
+ * @param ...$specs <p>Parameters description as [[callable, mixed|null], ...] - pairs of (validator, defaultValue)
+ *                  validators - list of validator functions, e.g. is_int, is_string, ...; should all return non nullish to pass
+ *                  defaultValue = mixed|null, optional default value if not provided input, if null - value is required
+ *                  </p>
+ * @return array <p>Array of expected values</p>
+ * @throws \InvalidArgumentException
  */
 function use_parameters($parameters, ...$specs): array {
     $values = [];
@@ -33,17 +41,25 @@ function use_parameters($parameters, ...$specs): array {
     }
     return $values;
 }
+/**
+ * @param mixed $of
+ */
 function is_streamable($of): bool {
     return \is_array($of)
         || $of instanceof Stream
         || $of instanceof \Traversable
         || $of instanceof \Iterator
         || is_iterable($of)
+        || is_object($of)
         || $of instanceof \Generator
         || $of instanceof \IteratorAggregate
         || $of instanceof \ArrayObject;
 }
 
+/**
+ * Shortcut to Stream::of
+ * @param mixed $of
+ */
 function S($of): Stream {
     return Stream::of($of);
 }

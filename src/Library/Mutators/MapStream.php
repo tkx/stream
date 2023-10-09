@@ -16,9 +16,9 @@ class MapStream extends Stream {
         [$preserve_keys] = $this->useParameters(["is_bool", false]);
         foreach($this->iterator as $key => $value) {
             if($preserve_keys) {
-                yield $key => call_user_func($mutator, $value);
+                yield $key => \call_user_func($mutator, $value, $key);
             } else {
-                yield call_user_func($mutator, $value);
+                yield \call_user_func($mutator, $value, $key);
             }
         }
     }

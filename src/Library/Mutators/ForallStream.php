@@ -14,8 +14,8 @@ use Moteam\Stream\Stream;
 class ForallStream extends Stream {
     public function stream(): \Iterator {
         $mutator = $this->useMutator();
-        $data = iterator_to_array($this->iterator);
-        call_user_func($mutator, $data);
+        $data = \iterator_to_array($this->iterator);
+        \call_user_func($mutator, $data);
 
         foreach($data as $key => $value) {
             yield $key => $value;

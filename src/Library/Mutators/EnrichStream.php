@@ -19,7 +19,7 @@ class EnrichStream extends Stream {
             yield $key => $value;
         }
 
-        foreach(call_user_func($mutator, $data) as $key => $value) {
+        foreach(\call_user_func($mutator, $data) as $key => $value) {
             yield $key => $value;
         }
     }

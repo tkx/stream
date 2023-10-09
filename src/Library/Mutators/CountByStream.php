@@ -15,7 +15,7 @@ class CountByStream extends Stream {
         $mutator = $this->useMutator();
         $groups = [];
         foreach($this->iterator as $key => $value) {
-            $key0 = call_user_func($mutator, $value);
+            $key0 = \call_user_func($mutator, $value, $key);
             if(!is_int($key0) && !is_string($key0)) {
                 throw new \BadFunctionCallException();
             }

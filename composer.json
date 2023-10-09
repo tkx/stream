@@ -19,7 +19,7 @@
     },
     "authors": [
         {
-            "name": "tkxyz",
+            "name": "Tom",
             "email": "tk.moteam@gmail.com"
         }
     ],
@@ -32,6 +32,7 @@
         "vimeo/psalm": "^5.15"
     },
     "scripts": {
-        "test": "phpunit -v tests"
+        "test": "phpunit -v tests",
+        "stan": "phpstan analyze src"
     }
 }

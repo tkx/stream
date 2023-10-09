@@ -59,3 +59,30 @@ $test = S([
 ->filter(fn($v) => !!$v)
 ();
 print_r(["objects", $test]);
+
+// objects 2
+class Klass {
+    public ?stdClass $x = null;
+    public function __construct($v) {
+        if($v !== null) {
+            $this->x = new stdClass;
+            $this->x->v = $v;
+        }
+    }
+}
+$test = S([new Klass(0), new Klass(1), new Klass(2), new Klass(3), new Klass(null)])
+    ->filter(fn($o) => !!$o->x)
+    ->map(fn($o) => $o->x)
+    ->filter(fn($x) => $x->v != 0)
+    ->map(fn($x) => $x->v)
+    ()
+;
+print_r(["objects2", $test]);
+
+// object3
+$klass = new stdClass;
+$klass->x1 = 1;
+$klass->x2 = 2;
+$klass->x3 = "test";
+$test = S($klass);
+print_r(["object3", $test->keys()()]);

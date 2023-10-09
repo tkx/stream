@@ -16,7 +16,7 @@ class FilterStream extends Stream {
         [$preserve_keys] = $this->useParameters(["is_bool", false]);
         foreach($this->iterator as $key => $value) {
             if($this->mutator !== null) {
-                $temp = call_user_func($mutator, $value);
+                $temp = \call_user_func($mutator, $value, $key);
             } else {
                 $temp = !!$value;
             }

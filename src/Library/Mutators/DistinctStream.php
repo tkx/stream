@@ -15,7 +15,7 @@ class DistinctStream extends Stream {
     public function stream(): \Iterator {
         [$limit, $preserve_keys] = $this->useParameters(["is_int", 1], ["is_bool", false]);;
         foreach($this->iterator as $key => $value) {
-            if(array_key_exists($value, $this->hashMap)) {
+            if(\array_key_exists($value, $this->hashMap)) {
                 $this->hashMap[$value] += 1;
             } else {
                 $this->hashMap[$value] = 1;

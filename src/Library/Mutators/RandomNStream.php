@@ -12,11 +12,19 @@ use Moteam\Stream\Stream;
  */
 class RandomNStream extends Stream {
     public function stream(): \Iterator {
-        $data = iterator_to_array($this->iterator);
-        shuffle($data);
-        [$n] = $this->useParameters(["is_int", 1]);
+        $data = \iterator_to_array($this->iterator);
+        [$n, $preserve_keys] = $this->useParameters(["is_int", 1], ["is_bool", false]);
+        $keys = \array_keys($data);
+        \shuffle($keys);
+        $i = 0;
         for($i = 0; $i < $n; $i++) {
-            yield $data[$i];
+            $key = $keys[$i];
+            $value = $data[$key];
+            if($preserve_keys) {
+                yield $key => $value;
+            } else {
+                yield $value;
+            }
         }
     }
 }

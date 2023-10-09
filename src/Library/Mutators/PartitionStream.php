@@ -14,12 +14,22 @@ use Moteam\Stream\Stream;
 class PartitionStream extends Stream {
     public function stream(): \Iterator {
         $groups = [[], []];
+        $fn = $this->useMutator();
+        [$preserve_keys] = $this->useParameters(["is_bool", false]);
         foreach($this->iterator as $key => $value) {
-            $key0 = call_user_func($this->useMutator(), $value);
+            $key0 = \call_user_func($fn, $value, $key);
             if($key0 === true) {
-                $groups[0][] = $value;
+                if(!$preserve_keys) {
+                    $groups[0][] = $value;
+                } else {
+                    $groups[0][$key] = $value;
+                }
             } else {
-                $groups[1][] = $value;
+                if(!$preserve_keys) {
+                    $groups[1][] = $value;
+                } else {
+                    $groups[1][$key] = $value;
+                }
             }
         }
         foreach($groups as $key0 => $value0) {

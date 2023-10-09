@@ -13,7 +13,7 @@ class FindLastTerminal extends Terminal {
         [$fn] = $this->useParameters($parameters, ["is_callable", null]);
         $found = null;
         foreach($this->stream->stream() as $key => $value) {
-            if(call_user_func($fn, $value)) {
+            if(\call_user_func($fn, $value, $key)) {
                 $found = $value;
             }
         }

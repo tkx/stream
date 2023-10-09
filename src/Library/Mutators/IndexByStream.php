@@ -27,12 +27,9 @@ class IndexByStream extends Stream {
             if($key0 === null) {
                 continue;
             }
-            if(!array_key_exists($key0, $groups)) {
+            if(!\array_key_exists($key0, $groups)) {
                 $groups[$key0] = $value;
             }
-//            else {
-//                $groups[$key0][] = $value;
-//            }
         }
         foreach($groups as $key0 => $value0) {
             yield $key0 => $value0;

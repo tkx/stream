@@ -19,14 +19,12 @@ use function \Moteam\Stream\Library\use_parameters;
 /**
  * MoTeam - strategic web solutions.
  * 
- * Enter Stream Library - convenient array mutation and filtering conveyor, that takes the pain of working with arrays in PHP.
+ * Enter Stream Library - convenient array mutation and filtering conveyor, that takes the pain of working with traversable data in PHP.
  * 
  * Create Streams using "of" factory method, providing any suitable input, then chain mutator methods to transform
  * your data, then collect it applying any terminal method.
  * 
  * Backed by PHP generators, all chained methods are lazy, thus traversing your data only once when you collect it.
- * 
- * This is one rare arrays library, that supports chaining.
  * 
  * Write complex but clear transformation conveyors.
  * 
@@ -51,9 +49,10 @@ use function \Moteam\Stream\Library\use_parameters;
  * @method foreach(callable $do = function(mixed $x): void {}): Stream
  * @method forall(callable $do = function(mixed[] $values): void {}): Stream
  * @method groupBy(callable $by = fn(mixed $x): mixed => !!$x): Stream
- * @method mapBy(callable $by = fn(mixed $x): mixed => $x): Stream
+ * @method mapAll(callable $by = fn(mixed $x): mixed => $x): Stream
  * @method indexBy(string|int $x): Stream
  * @method keys(): Stream
+ * @method values(): Stream
  * @method limit(int $n, bool $preserve_keys = false): Stream
  * @method map(callable $by = fn(mixed $x): mixed => !!$x, bool $preserve_keys = false): Stream
  * @method partition(callable $by = fn(mixed $x): bool => !!$x): Stream
@@ -61,12 +60,13 @@ use function \Moteam\Stream\Library\use_parameters;
  * @method reject(callable $by = fn(mixed $x): bool => !!$x, bool $preserve_keys = false): Stream
  * @method skip(int $n, bool $preserve_keys = false): Stream
  * @method shuffle(): Stream
- * @method sort(callable $fn = fn(mixed $a, mixed $b): -1|0|1, bool $preserve_keys = false): Stream
+ * @method sort(callable $fn = fn(mixed $a, mixed $b): int, bool $preserve_keys = false): Stream
  *
  * @method allMatch(callable $by = fn(mixed $x): bool => !!$x): bool
  * @method anyMatch(callable $by = fn(mixed $x): bool => !!$x): bool
  * @method collect(): array
  * @method contains(mixed $v): bool
+ * @method has(mixed $k): bool
  * @method count(): int
  * @method findFirst(callable $by = fn(mixed $x): bool => !!$x): mixed
  * @method findLast(callable $by = fn(mixed $x): bool => !!$x): mixed
@@ -145,7 +145,12 @@ class Stream {
                     $this->iterator = $of->getIterator();
                     break;
                 default:
-                    throw new InvalidArgumentException();
+                    $this->iterator = (function() use($of) { 
+                        foreach((array)$of as $k => $v) {
+                            yield $k => $v;
+                        } 
+                    })();
+                    break;
             }
         }
 
@@ -154,7 +159,7 @@ class Stream {
     }
 
     /**
-     * Hook to obtain validated mutator function in prebuilt and extension Stream and Terminal classes
+     * Hook to obtain validated mutator function in prebuilt and extension Stream classes
      * @return callable | null
      */
     protected function useMutator(bool $optional = false) {
@@ -168,41 +173,17 @@ class Stream {
     }
 
     /**
-     * Hook to obtain validated parameters for mutator in prebuilt and extension Stream and Terminal classes
-     * Validates and returns clean data gotten from user input, Exception is thrown if data in invalid
+     * Hook to obtain validated parameters for mutator in prebuilt and extension Stream classes.
+     * Validates and returns clean data gotten from user input, Exception is thrown if data is invalid
      * @param ...$specs <p>Parameters description as [[callable, mixed|null], ...] - pairs of (validator, defaultValue)
      *                  validators - list of validator functions, e.g. is_int, is_string, ...; should all return non nullish to pass
-     *                  defaultValue = mixed|null, optional default value if not provided input
+     *                  defaultValue = mixed|null, optional default value if not provided input, if null - value is required
      *                  </p>
      * @return array <p>Array of expected values</p>
      * @throws InvalidArgumentException
      */
     protected function useParameters(...$specs): array {
         return use_parameters($this->parameters, ...$specs);
-        // $values = [];
-        // foreach($specs as $i => $spec) {
-        //     [$validators, $default] = $spec;
-        //     if(array_key_exists($i, $this->parameters)) {
-        //         if(!is_array($validators)) {
-        //             $validators = [$validators];
-        //         }
-        //         foreach($validators as $validator) {
-        //             if (is_callable($validator) && !call_user_func($validator, $this->parameters[$i])) {
-        //                 throw new InvalidArgumentException();
-        //             }
-        //             if (!is_callable($validator)) {
-        //                 throw new InvalidArgumentException();
-        //             }
-        //         }
-        //         $values[] = $this->parameters[$i];
-        //     } else {
-        //         if($default === null) {
-        //             throw new InvalidArgumentException();
-        //         }
-        //         $values[] = $default;
-        //     }
-        // }
-        // return $values;
     }
 
     /**
@@ -230,12 +211,12 @@ class Stream {
             yield from $this->stream();
         })();
 
-        if(count($parameters) >= 2) {
-            return $klass::of($new_iterator, $parameters);
-        } else if(count($parameters) == 1 && !is_callable($parameters[0])) {
-            return $klass::of($new_iterator, null, $parameters[0]);
-        } else if(count($parameters) == 1 && is_callable($parameters[0])) {
-            return $klass::of($new_iterator, $parameters[0]);
+        if(count($parameters) > 0) {
+            if(!is_callable($parameters[0])) {
+                return $klass::of($new_iterator, null, ...$parameters);
+            } else {
+                return $klass::of($new_iterator, ...$parameters);
+            }
         } else {
             return $klass::of($new_iterator);
         }
@@ -243,7 +224,7 @@ class Stream {
 
     /**
      * This is a shortcut to collect() terminal call
-     * @return mixed
+     * @return mixed[]
      */
     public function __invoke() {
         return $this->collect();

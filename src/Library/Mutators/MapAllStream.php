@@ -6,11 +6,11 @@ use Moteam\Stream\Stream;
 
 /**
  * Given result of application of groupBy method to source stream, applies function to each stream group
- * @method mapBy(callable $by = fn(mixed $x): mixed => $x): Stream
+ * @method mapAll(callable $by = fn(mixed $x): mixed => $x): Stream
  * 
  * @psalm-api
  */
-class MapByStream extends Stream {
+class MapAllStream extends Stream {
     public function stream(): \Iterator {
         $mutator = $this->useMutator();
         [$preserve_keys] = $this->useParameters(["is_bool", false]);
@@ -18,9 +18,9 @@ class MapByStream extends Stream {
             $data = [];
             foreach($streamable as $key => $value) {
                 if($preserve_keys) {
-                    $data[$key] = call_user_func($mutator, $value);
+                    $data[$key] = \call_user_func($mutator, $value, $key, $key0);
                 } else {
-                    $data[] = call_user_func($mutator, $value);
+                    $data[] = \call_user_func($mutator, $value, $key, $key0);
                 }
             }
             yield $key0 => $data;
