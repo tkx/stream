@@ -21,40 +21,40 @@ use function \Moteam\Stream\Library\use_parameters;
  *
  * @method concat(mixed $source, bool $preserve_keys = false): Stream
  * @method concatBefore(mixed $source, bool $preserve_keys = false): Stream
- * @method countBy(callable $by = fn(mixed $x): mixed => !!$x): Stream
+ * @method countBy(callable $by = fn(mixed $x, mixed $k): mixed => !!$x): Stream
  * @method distinct(int $limit, bool $preserve_keys = false): Stream
  * @method enrich(callable $with = fn(array $data): Iterator => yield from $data): Stream
- * @method filter(callable $by = fn(mixed $x): bool => !!$x, bool $preserve_keys = false): Stream
- * @method foreach(callable $do = function(mixed $x): void {}): Stream
+ * @method filter(callable $by = fn(mixed $x, mixed $k): bool => !!$x, bool $preserve_keys = false): Stream
+ * @method foreach(callable $do = function(mixed $x, mixed $k): void {}): Stream
  * @method forall(callable $do = function(mixed[] $values): void {}): Stream
- * @method groupBy(callable $by = fn(mixed $x): mixed => !!$x): Stream
- * @method mapAll(callable $by = fn(mixed $x): mixed => $x): Stream
+ * @method groupBy(callable $by = fn(mixed $x, mixed $k): mixed => !!$x, bool $preserve_keys = false): Stream
+ * @method mapAll(callable $by = fn(mixed $x, mixed $k, mixed $k0): mixed => $x): Stream
  * @method indexBy(string|int $x): Stream
  * @method keys(): Stream
  * @method values(): Stream
  * @method limit(int $n, bool $preserve_keys = false): Stream
- * @method map(callable $by = fn(mixed $x): mixed => !!$x, bool $preserve_keys = false): Stream
- * @method partition(callable $by = fn(mixed $x): bool => !!$x): Stream
+ * @method map(callable $by = fn(mixed $x, mixed $k): mixed => !!$x, bool $preserve_keys = false): Stream
+ * @method partition(callable $by = fn(mixed $x, mixed $k): bool => !!$x): Stream
  * @method randomN(int $n = 1): Stream
- * @method reject(callable $by = fn(mixed $x): bool => !!$x, bool $preserve_keys = false): Stream
+ * @method reject(callable $by = fn(mixed $x, mixed $k): bool => !!$x, bool $preserve_keys = false): Stream
  * @method skip(int $n, bool $preserve_keys = false): Stream
  * @method shuffle(): Stream
  * @method sort(callable $fn = fn(mixed $a, mixed $b): int, bool $preserve_keys = false): Stream
  *
- * @method allMatch(callable $by = fn(mixed $x): bool => !!$x): bool
- * @method anyMatch(callable $by = fn(mixed $x): bool => !!$x): bool
+ * @method allMatch(callable $by = fn(mixed $x, mixed $k): bool => !!$x): bool
+ * @method anyMatch(callable $by = fn(mixed $x, mixed $k): bool => !!$x): bool
  * @method collect(): array
  * @method contains(mixed $v): bool
  * @method has(mixed $k): bool
  * @method count(): int
- * @method findFirst(callable $by = fn(mixed $x): bool => !!$x): mixed
- * @method findLast(callable $by = fn(mixed $x): bool => !!$x): mixed
+ * @method findFirst(callable $by = fn(mixed $x, mixed $k): bool => !!$x): mixed
+ * @method findLast(callable $by = fn(mixed $x, mixed $k): bool => !!$x): mixed
  * @method max(callable $comp = fn(mixed $a, mixed $b): int => $a - $b): mixed
  * @method min(callable $comp = fn(mixed $a, mixed $b): int => $a - $b): mixed
  * @method object(): \stdClass
  * @method random(): mixed
  * @method shuffled(): mixed[]
- * @method reduce(callable $by = fn(mixed $acc, mixed $value): mixed => $acc + $value): mixed
+ * @method reduce(callable $by = fn(mixed $acc, mixed $value, mixed $key): mixed => $acc + $value): mixed
  * 
  * @package Moteam\Stream
  */

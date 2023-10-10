@@ -4,7 +4,7 @@ namespace Moteam\Stream\Library\Terminals;
 
 /**
  * Finds first value of stream which satisfies given function
- * @method findFirst(callable $by = fn(mixed $x): bool => !!$x): mixed
+ * @method findFirst(callable $by = fn(mixed $x, mixed $k): bool => !!$x): mixed
  * 
  * @psalm-api
  */

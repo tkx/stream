@@ -7,7 +7,7 @@ use Moteam\Stream\Stream;
 /**
  * Divides source stream into two groups by boolean return of given function, applied to each source stream value.
  * Same as groupBy, but grouper is of boolean return
- * @method partition(callable $by = fn(mixed $x): bool => !!$x): Stream
+ * @method partition(callable $by = fn(mixed $x, mixed $k): bool => !!$x): Stream
  * 
  * @psalm-api
  */

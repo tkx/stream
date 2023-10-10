@@ -6,7 +6,7 @@ use Moteam\Stream\Stream;
 
 /**
  * Counts and groups values returned by input function, applied to each stream element; then streams the result
- * @method countBy(callable $by = fn(mixed $x): mixed => !!$x): Stream
+ * @method countBy(callable $by = fn(mixed $x, mixed $k): mixed => !!$x): Stream
  * 
  * @psalm-api
  */

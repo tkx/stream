@@ -6,7 +6,7 @@ use Moteam\Stream\Stream;
 
 /**
  * Given result of application of groupBy method to source stream, applies function to each stream group
- * @method mapAll(callable $by = fn(mixed $x): mixed => $x): Stream
+ * @method mapAll(callable $by = fn(mixed $x, mixed $k, mixed $k0): mixed => $x): Stream
  * 
  * @psalm-api
  */

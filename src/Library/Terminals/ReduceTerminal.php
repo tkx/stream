@@ -4,7 +4,7 @@ namespace Moteam\Stream\Library\Terminals;
 
 /**
  * Reduces source stream by given function
- * @method reduce(callable $by = fn(mixed $acc, mixed $value): mixed => $acc + $value): mixed
+ * @method reduce(callable $by = fn(mixed $acc, mixed $value, mixed $key): mixed => $acc + $value): mixed
  * 
  * @psalm-api
  */

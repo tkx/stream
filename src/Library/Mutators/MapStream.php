@@ -6,7 +6,7 @@ use Moteam\Stream\Stream;
 
 /**
  * Applies given function to each source stream element, and stream the result
- * @method map(callable $by = fn(mixed $x): mixed => !!$x, bool $preserve_keys = false): Stream
+ * @method map(callable $by = fn(mixed $x, mixed $k): mixed => !!$x, bool $preserve_keys = false): Stream
  * 
  * @psalm-api
  */

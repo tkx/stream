@@ -4,7 +4,7 @@ namespace Moteam\Stream\Library\Terminals;
 
 /**
  * Returns true if at least one of source stream elements satisfy given function
- * @method anyMatch(callable $by = fn(mixed $x): bool => !!$x): bool
+ * @method anyMatch(callable $by = fn(mixed $x, mixed $k): bool => !!$x): bool
  * 
  * @psalm-api
  */

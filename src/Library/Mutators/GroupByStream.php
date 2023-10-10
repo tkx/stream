@@ -6,7 +6,7 @@ use Moteam\Stream\Stream;
 
 /**
  * Groups source stream by values returned by input function and streams the result
- * @method groupBy(callable $by = fn(mixed $x): mixed => !!$x, bool $preserve_keys = false): Stream
+ * @method groupBy(callable $by = fn(mixed $x, mixed $k): mixed => !!$x, bool $preserve_keys = false): Stream
  * 
  * @psalm-api
  */

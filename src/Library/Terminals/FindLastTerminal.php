@@ -4,7 +4,7 @@ namespace Moteam\Stream\Library\Terminals;
 
 /**
  * Finds last value of stream which satisfies given function
- * @method findLast(callable $by = fn(mixed $x): bool => !!$x): mixed
+ * @method findLast(callable $by = fn(mixed $x, mixed $k): bool => !!$x): mixed
  * 
  * @psalm-api
  */

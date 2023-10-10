@@ -7,7 +7,7 @@ use Moteam\Stream\Stream;
 /**
  * Applies given function to each element of input stream; streams the source data without changes
  * Can not be used for mutating source stream
- * @method foreach(callable $do = function(mixed $x): void {}): Stream
+ * @method foreach(callable $do = function(mixed $x, mixed $k): void {}): Stream
  * 
  * @psalm-api
  */
