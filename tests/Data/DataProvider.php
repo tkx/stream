@@ -3,7 +3,9 @@
 namespace Moteam\Stream\Tests\Data;
 
 require_once "MyIterator.php";
+require_once "Misc.php";
 use Moteam\Stream\Stream as S;
+use Moteam\Stream\Tests\Data\Func;
 
 class DataProvider {
     public static function create(): array {
@@ -59,6 +61,24 @@ class DataProvider {
                 fn($x, $k) => ("" . ($x * 2) . $k),
                 true
             ],
+            [
+                [0, 2, 6, 12, 20],
+                [1, 2, 3, 4, 5],
+                [new Func(), "f1"],
+                false,
+            ],
+            [
+                [0, 2, 6, 12, 20],
+                [1, 2, 3, 4, 5],
+                [Func::class, "f0"],
+                false,
+            ],
+            [
+                [0, 2, 6, 12, 20],
+                [1, 2, 3, 4, 5],
+                "\\Moteam\\Stream\\Tests\\Data\\f2",
+                false,
+            ],
         ];
     }
 
@@ -105,6 +125,24 @@ class DataProvider {
                 [2, 3, 4, 5],
                 [1, 0, 2, 0, 3, 0, 4, 0, 5, 0],
                 fn($x, $k) => $x != 0 && $k != 0,
+                false,
+            ],
+            [
+                [2, 3, 4, 5],
+                [1, 0, 2, 0, 3, 0, 4, 0, 5, 0],
+                "\\Moteam\\Stream\\Tests\\Data\\f3",
+                false,
+            ],
+            [
+                [2, 3, 4, 5],
+                [1, 0, 2, 0, 3, 0, 4, 0, 5, 0],
+                [Func::class, "f3"],
+                false,
+            ],
+            [
+                [2, 3, 4, 5],
+                [1, 0, 2, 0, 3, 0, 4, 0, 5, 0],
+                [new Func(), "f2"],
                 false,
             ],
         ];

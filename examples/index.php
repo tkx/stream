@@ -86,3 +86,22 @@ $klass->x2 = 2;
 $klass->x3 = "test";
 $test = S($klass);
 print_r(["object3", $test->keys()()]);
+
+class Func {
+    public static function f0($v, $k) {
+        return $v * $k;
+    }
+    public function f1($v, $k) {
+        return $v * $k;
+    }
+}
+$func = new Func();
+function f0($v, $k) {
+    return $v * $k;
+}
+print_r([
+    "callables",
+    S(["1", "2", "3", "4", "5"])->map("f0")->collect(),
+    S(["1", "2", "3", "4"])->map([Func::class, "f0"])->collect(),
+    S(["1", "2", "3", "4"])->map([$func, "f1"])->collect(),
+]);

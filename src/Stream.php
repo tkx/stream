@@ -17,7 +17,7 @@ use function is_object;
 use function \Moteam\Stream\Library\use_parameters;
 
 /**
- * Basic class that transfroms anything traversable into generator-backed values stream.
+ * Basic class that transforms anything traversable into generator-backed values stream.
  *
  * @method concat(mixed $source, bool $preserve_keys = false): Stream
  * @method concatBefore(mixed $source, bool $preserve_keys = false): Stream
@@ -133,7 +133,11 @@ class Stream {
             }
         }
 
-        $this->mutator = $mutator;
+        if($mutator instanceof Closure) {
+            $this->mutator = $mutator;
+        } else if($mutator && is_callable($mutator)) {
+            $this->mutator = Closure::fromCallable($mutator);
+        }
         $this->parameters = $parameters;
     }
 
