@@ -180,7 +180,7 @@ class Stream {
     public function __call(string $name, array $parameters) {
         if(class_exists("\\Moteam\\Stream\\Library\\Terminals\\{$name}Terminal", true)) {
             /** @var Terminal $klass */
-            $klass = "\\Moteam\\Stream\\Library\\Terminals\\${name}Terminal";
+            $klass = "\\Moteam\\Stream\\Library\\Terminals\\{$name}Terminal";
             return ($klass::of($this))(...$parameters);
         }
 
