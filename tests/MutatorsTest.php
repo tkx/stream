@@ -10,7 +10,7 @@ use function Moteam\Stream\Library\S as __S;
 
 class MutatorsTest extends TestCase {
     /**
-     * @covers \Moteam\Stream\Library\Mutators\ConcatStream
+     * @covers \Moteam\Stream\Library\Streams\ConcatStream
      * @covers \Moteam\Stream::concat
      * @dataProvider concatProvider
      */
@@ -23,7 +23,7 @@ class MutatorsTest extends TestCase {
         );
     }
     /**
-     * @covers \Moteam\Stream\Library\Mutators\ConcatBeforeStream
+     * @covers \Moteam\Stream\Library\Streams\ConcatBeforeStream
      * @covers \Moteam\Stream::concatBefore
      * @dataProvider concatBeforeProvider
      */
@@ -32,7 +32,7 @@ class MutatorsTest extends TestCase {
     }
 
     /**
-     * @covers \Moteam\Stream\Library\Mutators\MapStream
+     * @covers \Moteam\Stream\Library\Streams\MapStream
      * @covers \Moteam\Stream::map
      * @dataProvider mapProvider
      */
@@ -41,7 +41,7 @@ class MutatorsTest extends TestCase {
     }
 
     /**
-     * @covers \Moteam\Stream\Library\Mutators\MapAllStream
+     * @covers \Moteam\Stream\Library\Streams\MapAllStream
      * @covers \Moteam\Stream::mapAll
      */
     public function testMapBy(): void {
@@ -68,7 +68,7 @@ class MutatorsTest extends TestCase {
     }
 
     /**
-     * @covers \Moteam\Stream\Library\Mutators\DistinctStream
+     * @covers \Moteam\Stream\Library\Streams\DistinctStream
      * @covers \Moteam\Stream::distinct
      * @dataProvider distinctProvider
      */
@@ -82,7 +82,7 @@ class MutatorsTest extends TestCase {
     }
 
     /**
-     * @covers \Moteam\Stream\Library\Mutators\EnrichStream
+     * @covers \Moteam\Stream\Library\Streams\EnrichStream
      * @covers \Moteam\Stream::enrich
      * @dataProvider enrichProvider
      */
@@ -91,7 +91,7 @@ class MutatorsTest extends TestCase {
     }
 
     /**
-     * @covers \Moteam\Stream\Library\Mutators\FilterStream
+     * @covers \Moteam\Stream\Library\Streams\FilterStream
      * @covers \Moteam\Stream::filter
      * @dataProvider filterProvider
      */
@@ -101,7 +101,7 @@ class MutatorsTest extends TestCase {
     }
 
     /**
-     * @covers \Moteam\Stream\Library\Mutators\RejectStream
+     * @covers \Moteam\Stream\Library\Streams\RejectStream
      * @covers \Moteam\Stream::reject
      * @dataProvider rejectProvider
      */
@@ -110,7 +110,7 @@ class MutatorsTest extends TestCase {
     }
 
     /**
-     * @covers \Moteam\Stream\Library\Mutators\ForeachStream
+     * @covers \Moteam\Stream\Library\Streams\ForeachStream
      * @covers \Moteam\Stream::foreach
      */
     public function testForeach(): void {
@@ -128,7 +128,7 @@ class MutatorsTest extends TestCase {
     }
 
     /**
-     * @covers \Moteam\Stream\Library\Mutators\ForallStream
+     * @covers \Moteam\Stream\Library\Streams\ForallStream
      * @covers \Moteam\Stream::forall
      */
     public function testForall(): void {
@@ -140,7 +140,7 @@ class MutatorsTest extends TestCase {
     }
 
     /**
-     * @covers \Moteam\Stream\Library\Mutators\LimitStream
+     * @covers \Moteam\Stream\Library\Streams\LimitStream
      * @covers \Moteam\Stream::limit
      * @dataProvider limitProvider
      */
@@ -149,7 +149,7 @@ class MutatorsTest extends TestCase {
     }
 
     /**
-     * @covers \Moteam\Stream\Library\Mutators\SkipStream
+     * @covers \Moteam\Stream\Library\Streams\SkipStream
      * @covers \Moteam\Stream::skip
      * @dataProvider skipProvider
      */
@@ -158,7 +158,7 @@ class MutatorsTest extends TestCase {
     }
 
     /**
-     * @covers \Moteam\Stream\Library\Mutators\SortedStream
+     * @covers \Moteam\Stream\Library\Streams\SortedStream
      * @covers \Moteam\Stream::sorted
      * @dataProvider sortedProvider
      */
@@ -167,7 +167,7 @@ class MutatorsTest extends TestCase {
     }
 
     /**
-     * @covers \Moteam\Stream\Library\Mutators\CountByStream
+     * @covers \Moteam\Stream\Library\Streams\CountByStream
      * @covers \Moteam\Stream::countBy
      * @dataProvider countByProvider
      */
@@ -176,7 +176,7 @@ class MutatorsTest extends TestCase {
     }
 
     /**
-     * @covers \Moteam\Stream\Library\Mutators\GroupByStream
+     * @covers \Moteam\Stream\Library\Streams\GroupByStream
      * @covers \Moteam\Stream::groupBy
      * @dataProvider groupByProvider
      */
@@ -185,7 +185,7 @@ class MutatorsTest extends TestCase {
     }
 
     /**
-     * @covers \Moteam\Stream\Library\Mutators\IndexByStream
+     * @covers \Moteam\Stream\Library\Streams\IndexByStream
      * @covers \Moteam\Stream::indexBy
      * @dataProvider indexByProvider
      */
@@ -194,7 +194,7 @@ class MutatorsTest extends TestCase {
     }
 
     /**
-     * @covers \Moteam\Stream\Library\Mutators\KeysStream
+     * @covers \Moteam\Stream\Library\Streams\KeysStream
      * @covers \Moteam\Stream::keys
      * @dataProvider keysProvider
      */
@@ -203,7 +203,7 @@ class MutatorsTest extends TestCase {
     }
 
     /**
-     * @covers \Moteam\Stream\Library\Mutators\ValuesStream
+     * @covers \Moteam\Stream\Library\Streams\ValuesStream
      * @covers \Moteam\Stream::values
      * @dataProvider valuesProvider
      */
@@ -212,7 +212,7 @@ class MutatorsTest extends TestCase {
     }
 
     /**
-     * @covers \Moteam\Stream\Library\Mutators\PartitionStream
+     * @covers \Moteam\Stream\Library\Streams\PartitionStream
      * @covers \Moteam\Stream::partition
      * @dataProvider partitionProvider
      */
@@ -221,7 +221,7 @@ class MutatorsTest extends TestCase {
     }
 
     /**
-     * @covers \Moteam\Stream\Library\Mutators\ShuffleStream
+     * @covers \Moteam\Stream\Library\Streams\ShuffleStream
      * @covers \Moteam\Stream::shuffle
      */
     public function testShuffle(): void {
@@ -241,7 +241,7 @@ class MutatorsTest extends TestCase {
     }
 
     /**
-     * @covers \Moteam\Stream\Library\Mutators\RandomNStream
+     * @covers \Moteam\Stream\Library\Streams\RandomNStream
      * @covers \Moteam\Stream::randomN
      */
     public function testRandomN(): void {

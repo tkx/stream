@@ -46,12 +46,21 @@ class TerminalsTest extends TestCase {
     }
 
     /**
-     * @covers \Moteam\Stream\Library\Terminals\HasTerminal
-     * @covers \Moteam\Stream::has
+     * @covers \Moteam\Stream\Library\Terminals\HasKeyTerminal
+     * @covers \Moteam\Stream::hasKey
      */
-    public function testHas() {
-        $this->assertTrue(__S([2,4,6,8,10])->has(0));
-        $this->assertTrue(__S(["a"=>2,"b"=>4,"c"=>6,"d"=>8,"e"=>10])->has("d"));
+    public function testHasKey() {
+        $this->assertTrue(__S([2,4,6,8,10])->hasKey(0));
+        $this->assertTrue(__S(["a"=>2,"b"=>4,"c"=>6,"d"=>8,"e"=>10])->hasKey("d"));
+    }
+
+    /**
+     * @covers \Moteam\Stream\Library\Terminals\HasKeysTerminal
+     * @covers \Moteam\Stream::hasKeys
+     */
+    public function testHasKeys() {
+        $this->assertTrue(__S([2,4,6,8,10])->hasKeys([0, 1, 2]));
+        $this->assertTrue(__S(["a"=>2,"b"=>4,"c"=>6,"d"=>8,"e"=>10])->hasKeys(["a", "d"]));
     }
 
     /**

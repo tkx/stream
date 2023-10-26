@@ -19,12 +19,12 @@ function use_parameters($parameters, ...$specs): array {
     $values = [];
     foreach($specs as $i => $spec) {
         [$validators, $default] = $spec;
-        if(array_key_exists($i, $parameters)) {
-            if(!is_array($validators)) {
+        if(\array_key_exists($i, $parameters)) {
+            if(!\is_array($validators)) {
                 $validators = [$validators];
             }
             foreach($validators as $validator) {
-                if (\is_callable($validator) && !call_user_func($validator, $parameters[$i])) {
+                if (\is_callable($validator) && !\call_user_func($validator, $parameters[$i])) {
                     throw new \InvalidArgumentException();
                 }
                 if (!\is_callable($validator)) {
@@ -46,7 +46,7 @@ function use_parameters($parameters, ...$specs): array {
  */
 function is_streamable($of): bool {
     return \is_array($of)
-        || $of instanceof Stream
+        || $of instanceof StreamInterface
         || $of instanceof \Traversable
         || $of instanceof \Iterator
         || is_iterable($of)
@@ -60,6 +60,6 @@ function is_streamable($of): bool {
  * Shortcut to Stream::of
  * @param mixed $of
  */
-function S($of): Stream {
+function S($of): StreamInterface {
     return Stream::of($of);
 }

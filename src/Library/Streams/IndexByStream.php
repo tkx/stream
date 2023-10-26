@@ -1,16 +1,17 @@
 <?php
 
-namespace Moteam\Stream\Library\Mutators;
+namespace Moteam\Stream\Library\Streams;
 
+use Moteam\Stream\Library\StreamInterface;
 use Moteam\Stream\Stream;
 
 /**
  * Indexes source stream by given key, then streams the result
- * @method indexBy(string|int $x): Stream
+ * @method StreamInterface indexBy(string|int $x)
  * 
  * @psalm-api
  */
-class IndexByStream extends Stream {
+class IndexByStream extends Stream implements StreamInterface {
     public function stream(): \Iterator {
         $groups = [];
         [$name] = $this->useParameters(["is_scalar", null]);

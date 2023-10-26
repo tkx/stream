@@ -1,6 +1,6 @@
 <?php
 
-namespace Moteam\Stream\Library\Mutators;
+namespace Moteam\Stream\Library\Streams;
 
 use Moteam\Stream\Stream;
 

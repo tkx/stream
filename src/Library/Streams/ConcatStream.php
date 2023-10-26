@@ -1,16 +1,17 @@
 <?php
 
-namespace Moteam\Stream\Library\Mutators;
+namespace Moteam\Stream\Library\Streams;
 
+use Moteam\Stream\Library\StreamInterface;
 use Moteam\Stream\Stream;
 
 /**
  * Streams given input after the source stream.
- * @method concat(mixed $source, bool $preserve_keys = false): Stream
+ * @method StreamInterface concat(mixed $source, bool $preserve_keys = false)
  * 
  * @psalm-api
  */
-class ConcatStream extends Stream {
+class ConcatStream extends Stream implements StreamInterface {
     public function stream(): \Iterator {
         [$input, $preserve_keys] = $this->useParameters(["\Moteam\Stream\Library\is_streamable", null], ["is_bool", false]);
         foreach($this->iterator as $key => $value) {

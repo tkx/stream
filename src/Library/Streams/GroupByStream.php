@@ -1,16 +1,17 @@
 <?php
 
-namespace Moteam\Stream\Library\Mutators;
+namespace Moteam\Stream\Library\Streams;
 
+use Moteam\Stream\Library\StreamInterface;
 use Moteam\Stream\Stream;
 
 /**
  * Groups source stream by values returned by input function and streams the result
- * @method groupBy(callable $by = fn(mixed $x, mixed $k): mixed => !!$x, bool $preserve_keys = false): Stream
+ * @method StreamInterface groupBy(callable $by = fn(mixed $x, mixed $k): mixed => !!$x, bool $preserve_keys = false)
  * 
  * @psalm-api
  */
-class GroupByStream extends Stream {
+class GroupByStream extends Stream implements StreamInterface {
     public function stream(): \Iterator {
         $mutator = $this->useMutator();
         $groups = [];

@@ -1,16 +1,17 @@
 <?php
 
-namespace Moteam\Stream\Library\Mutators;
+namespace Moteam\Stream\Library\Streams;
 
+use Moteam\Stream\Library\StreamInterface;
 use Moteam\Stream\Stream;
 
 /**
  * Streams source, sorted using given comparator function
- * @method sort(callable $fn = fn(mixed $a, mixed $b): int, bool $by_keys = false, bool $preserve_keys = false): Stream
+ * @method StreamInterface sort(callable $fn = fn(mixed $a, mixed $b): int, bool $by_keys = false, bool $preserve_keys = false)
  * 
  * @psalm-api
  */
-class SortStream extends Stream {
+class SortStream extends Stream implements StreamInterface {
     public function stream(): \Iterator {
         $fn = $this->useMutator();
         $data = \iterator_to_array($this->iterator);

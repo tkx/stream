@@ -1,14 +1,15 @@
 <?php
 
 namespace Moteam\Stream\Library\Terminals;
+use Moteam\Stream\Library\TerminalInterface;
 
 /**
  * Returns true if given value presents in this stream
- * @method contains(mixed $v): bool
+ * @method bool contains(mixed $v)
  * 
  * @psalm-api
  */
-class ContainsTerminal extends Terminal {
+class ContainsTerminal extends Terminal implements TerminalInterface {
     public function __invoke(...$parameters) {
         [$v] = $this->useParameters($parameters, [fn($x) => true, null]);
         foreach($this->stream->stream() as $key => $value) {

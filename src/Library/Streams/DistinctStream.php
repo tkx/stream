@@ -1,16 +1,17 @@
 <?php
 
-namespace Moteam\Stream\Library\Mutators;
+namespace Moteam\Stream\Library\Streams;
 
+use Moteam\Stream\Library\StreamInterface;
 use Moteam\Stream\Stream;
 
 /**
  * Streams unique values from source stream, limit can be set to stream more than 1 occurrence
- * @method distinct(int $limit, bool $preserve_keys = false): Stream
+ * @method StreamInterface distinct(int $limit, bool $preserve_keys = false)
  * 
  * @psalm-api
  */
-class DistinctStream extends Stream {
+class DistinctStream extends Stream implements StreamInterface {
     public array $hashMap = [];
     public function stream(): \Iterator {
         [$limit, $preserve_keys] = $this->useParameters(["is_int", 1], ["is_bool", false]);;

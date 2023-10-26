@@ -1,16 +1,17 @@
 <?php
 
-namespace Moteam\Stream\Library\Mutators;
+namespace Moteam\Stream\Library\Streams;
 
+use Moteam\Stream\Library\StreamInterface;
 use Moteam\Stream\Stream;
 
 /**
  * Streams data filtered by input function
- * @method filter(callable $by = fn(mixed $x, mixed $k): bool => !!$x, bool $preserve_keys = false): Stream
+ * @method StreamInterface filter(callable $by = fn(mixed $x, mixed $k): bool => !!$x, bool $preserve_keys = false)
  * 
  * @psalm-api
  */
-class FilterStream extends Stream {
+class FilterStream extends Stream implements StreamInterface {
     public function stream(): \Iterator {
         $mutator = $this->useMutator(true);
         [$preserve_keys] = $this->useParameters(["is_bool", false]);

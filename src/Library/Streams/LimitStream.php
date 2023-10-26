@@ -1,16 +1,17 @@
 <?php
 
-namespace Moteam\Stream\Library\Mutators;
+namespace Moteam\Stream\Library\Streams;
 
+use Moteam\Stream\Library\StreamInterface;
 use Moteam\Stream\Stream;
 
 /**
  * Streams first N values of source stream
- * @method limit(int $n, bool $preserve_keys = false): Stream
+ * @method StreamInterface limit(int $n, bool $preserve_keys = false)
  * 
  * @psalm-api
  */
-class LimitStream extends Stream {
+class LimitStream extends Stream implements StreamInterface {
     public function stream(): \Iterator {
         $i = 0;
         [$limit, $preserve_keys] = $this->useParameters(["is_int", null], ["is_bool", false]);

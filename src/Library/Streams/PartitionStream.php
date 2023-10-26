@@ -1,17 +1,18 @@
 <?php
 
-namespace Moteam\Stream\Library\Mutators;
+namespace Moteam\Stream\Library\Streams;
 
+use Moteam\Stream\Library\StreamInterface;
 use Moteam\Stream\Stream;
 
 /**
  * Divides source stream into two groups by boolean return of given function, applied to each source stream value.
  * Same as groupBy, but grouper is of boolean return
- * @method partition(callable $by = fn(mixed $x, mixed $k): bool => !!$x): Stream
+ * @method StreamInterface partition(callable $by = fn(mixed $x, mixed $k): bool => !!$x)
  * 
  * @psalm-api
  */
-class PartitionStream extends Stream {
+class PartitionStream extends Stream implements StreamInterface {
     public function stream(): \Iterator {
         $groups = [[], []];
         $fn = $this->useMutator();

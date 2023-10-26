@@ -1,16 +1,17 @@
 <?php
 
-namespace Moteam\Stream\Library\Mutators;
+namespace Moteam\Stream\Library\Streams;
 
+use Moteam\Stream\Library\StreamInterface;
 use Moteam\Stream\Stream;
 
 /**
  * Applies given function to each source stream element, and stream the result
- * @method map(callable $by = fn(mixed $x, mixed $k): mixed => !!$x, bool $preserve_keys = false): Stream
+ * @method StreamInterface map(callable $by = fn(mixed $x, mixed $k): mixed => !!$x, bool $preserve_keys = false)
  * 
  * @psalm-api
  */
-class MapStream extends Stream {
+class MapStream extends Stream implements StreamInterface {
     public function stream(): \Iterator {
         $mutator = $this->useMutator();
         [$preserve_keys] = $this->useParameters(["is_bool", false]);

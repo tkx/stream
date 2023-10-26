@@ -1,16 +1,17 @@
 <?php
 
-namespace Moteam\Stream\Library\Mutators;
+namespace Moteam\Stream\Library\Streams;
 
+use Moteam\Stream\Library\StreamInterface;
 use Moteam\Stream\Stream;
 
 /**
  * Shuffles source stream and streams the result
- * @method shuffle(): Stream
+ * @method StreamInterface shuffle()
  * 
  * @psalm-api
  */
-class ShuffleStream extends Stream {
+class ShuffleStream extends Stream implements StreamInterface {
     public function stream(): \Iterator {
         $data = \iterator_to_array($this->iterator);
         [$preserve_keys] = $this->useParameters(["is_bool", false]);

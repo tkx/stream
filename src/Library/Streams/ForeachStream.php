@@ -1,17 +1,18 @@
 <?php
 
-namespace Moteam\Stream\Library\Mutators;
+namespace Moteam\Stream\Library\Streams;
 
+use Moteam\Stream\Library\StreamInterface;
 use Moteam\Stream\Stream;
 
 /**
  * Applies given function to each element of input stream; streams the source data without changes
  * Can not be used for mutating source stream
- * @method foreach(callable $do = function(mixed $x, mixed $k): void {}): Stream
+ * @method StreamInterface foreach(callable $do = function(mixed $x, mixed $k): void {})
  * 
  * @psalm-api
  */
-class ForeachStream extends Stream {
+class ForeachStream extends Stream implements StreamInterface {
     public function stream(): \Iterator {
         $mutator = $this->useMutator();
         foreach($this->iterator as $key => $value) {

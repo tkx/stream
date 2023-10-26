@@ -1,16 +1,17 @@
 <?php
 
-namespace Moteam\Stream\Library\Mutators;
+namespace Moteam\Stream\Library\Streams;
 
+use Moteam\Stream\Library\StreamInterface;
 use Moteam\Stream\Stream;
 
 /**
  * Streams N random values from source stream
- * @method randomN(int $n = 1): Stream
+ * @method StreamInterface randomN(int $n = 1)
  * 
  * @psalm-api
  */
-class RandomNStream extends Stream {
+class RandomNStream extends Stream implements StreamInterface {
     public function stream(): \Iterator {
         $data = \iterator_to_array($this->iterator);
         [$n, $preserve_keys] = $this->useParameters(["is_int", 1], ["is_bool", false]);
