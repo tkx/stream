@@ -4,7 +4,7 @@ namespace Moteam\Stream\Library\Terminals;
 use Moteam\Stream\Library\TerminalInterface;
 
 /**
- * Returns true if given key presents in this stream
+ * Returns true if all given keys presents in this stream
  * @method bool hasKeys(array $keys)
  * 
  * @psalm-api
